@@ -14,6 +14,7 @@ import createModels from './models';
 import createRoutes, { SiriusRouter } from './routes';
 import tokenMiddleware from './middlewares/pipes/token';
 import websocket from './websocket';
+import teleHandler, { bot } from './telegram/handler';
 
 /** import .env file configuration */
 dotenv.config();
@@ -40,7 +41,7 @@ app.use(tokenMiddleware(models)); // token auth
 app.use(nocache()); // no cache
 
 /** router configuration */
-const routes: SiriusRouter[] = createRoutes(app, models, io);
+const routes: SiriusRouter[] = createRoutes(app, models, io, bot);
 const apiURL: string = process.env.API_URL ? process.env.API_URL : '/api';
 let routeData: any = {};
 
@@ -55,10 +56,10 @@ routes.forEach((route: SiriusRouter) => {
 			let verbs: any = route.methods.get
 				? 'GET'
 				: route.methods.post
-				? 'POST'
-				: route.methods.put
-				? 'PUT'
-				: 'DELETE';
+					? 'POST'
+					: route.methods.put
+						? 'PUT'
+						: 'DELETE';
 			let keys: any = info.keys.map((t: any) => t.name);
 			routeData[key].endpoints.push({ endpoint, verbs, keys });
 		}
@@ -89,12 +90,33 @@ app.get(
 	},
 );
 
+app.get(
+	'/file/:id',
+	(req: express.Request, res: express.Response) => {
+		const { id } = req.params;
+		models.File.findByPk(id).then((file) => {
+			if (!file) res.status(404).send('not found');
+			const b64 = file?.data.split(',')[1]!;
+			const header = file?.data.split(',')[0]!;
+			const mime = header.replace('data:', '').replace(';base64', '');
+			const buff = new Buffer(b64, 'base64');
+			res.writeHead(200, {
+				'Content-Type': mime,
+				'Content-Length': buff.length
+			});
+			res.end(buff);
+		});
+	}
+)
+
 /** root route */
 if (process.env.NODE_ENV === 'development') {
 	app.use(express.static(path.resolve(__dirname, '..', 'inspector')));
 } else {
 	app.use(express.static(path.resolve(__dirname, '..', 'frontend')));
 }
+
+teleHandler(models);
 
 /** sync models & start server */
 models.sequelize

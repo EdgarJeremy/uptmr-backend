@@ -57,6 +57,7 @@ const usersRoute: Routes = (
 		a(
 			async (req: express.Request, res: express.Response): Promise<void> => {
 				const data: UserAttributes = req.body;
+				data.telegram_code = Math.floor(100000 + Math.random() * 900000);
 				const user: UserInstance = await models.User.create({
 					...data,
 					password: bcrypt.hashSync(data.password, 10),

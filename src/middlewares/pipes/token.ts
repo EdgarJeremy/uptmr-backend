@@ -84,6 +84,10 @@ export const generateNewTokens: GenerateNewTokensInterface = async (
 			const user: UserInstance | null = await models.User.findOne({
 				where: payload.id,
 				attributes: { include: ['password'] },
+				include: [{
+					model: models.Department,
+					attributes: ['id', 'name']
+				}]
 			});
 			if (user && user.id) {
 				let refreshKey: string = refreshSecret + user.password;
@@ -121,6 +125,10 @@ const tokenMiddleware: TokenMiddleware = (models: ModelFactoryInterface): expres
 				if (payload) {
 					const user: UserInstance | null = await models.User.findOne({
 						where: { id: payload.id },
+						include: [{
+							model: models.Department,
+							attributes: ['id', 'name']
+						}]
 					});
 					if (user) {
 						req.user = user;

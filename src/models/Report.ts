@@ -2,12 +2,24 @@ import Sequelize from 'sequelize';
 import { SequelizeAttributes } from './typings/SequelizeAttributes';
 import { Factory } from './typings/ModelInterface';
 import ModelFactoryInterface from './typings/ModelFactoryInterface';
+import { UserInstance } from './User';
+
+export interface Questionnaire {
+    breakage: number;
+    availability: number;
+    warranty: number;
+    usability: number;
+}
 
 export interface ReportAttributes {
     id?: number;
     description: string;
-    photo: string;
-    urgency: 1 | 2 | 3;
+    urgency: number;
+    room: string;
+    since: Date;
+    done: boolean;
+    rejection_note: string;
+    questionnaire: Questionnaire;
     user_id?: number;
     department_id?: number;
     created_at?: Date;
@@ -15,6 +27,7 @@ export interface ReportAttributes {
 }
 
 export interface ReportInstance extends Sequelize.Instance<ReportAttributes>, ReportAttributes {
+    user: UserInstance;
 }
 
 export interface Associate {
@@ -30,12 +43,28 @@ export const ReportFactory: Factory<ReportInstance, ReportAttributes> = (
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        photo: {
-            type: DataTypes.TEXT,
+        urgency: {
+            type: DataTypes.FLOAT,
             allowNull: false
         },
-        urgency: {
-            type: DataTypes.INTEGER,
+        room: {
+            type: DataTypes.STRING(191),
+            allowNull: false
+        },
+        since: {
+            type: DataTypes.DATEONLY,
+            allowNull: false
+        },
+        done: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        rejection_note: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
+        questionnaire: {
+            type: DataTypes.JSONB,
             allowNull: false
         }
     };
@@ -47,6 +76,7 @@ export const ReportFactory: Factory<ReportInstance, ReportAttributes> = (
     Report.associate = (models: ModelFactoryInterface): void => {
         Report.belongsTo(models.User, { onDelete: 'cascade' });
         Report.belongsTo(models.Department, { onDelete: 'cascade' });
+        Report.hasMany(models.File, { onDelete: 'cascade' });
     };
 
     return Report;

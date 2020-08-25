@@ -2,6 +2,7 @@ import Sequelize from 'sequelize';
 import { SequelizeAttributes } from './typings/SequelizeAttributes';
 import { Factory } from './typings/ModelInterface';
 import ModelFactoryInterface from './typings/ModelFactoryInterface';
+import { DepartmentInstance } from './Department';
 
 export interface UserAttributes {
 	id?: number;
@@ -9,13 +10,16 @@ export interface UserAttributes {
 	username: string;
 	password: string;
 	type: 'UPT' | 'Department' | 'Administrator';
-	target_id: number | null;
+	target_id: number[] | null;
+	telegram_code: number;
+	telegram_chat_id: number;
 	department_id?: number;
 	created_at?: Date;
 	updated_at?: Date;
 }
 
 export interface UserInstance extends Sequelize.Instance<UserAttributes>, UserAttributes {
+	department: DepartmentInstance;
 }
 
 export interface Associate {
@@ -45,6 +49,14 @@ export const UserFactory: Factory<UserInstance, UserAttributes> = (
 			allowNull: false
 		},
 		target_id: {
+			type: DataTypes.JSONB,
+			allowNull: true
+		},
+		telegram_code: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		telegram_chat_id: {
 			type: DataTypes.INTEGER,
 			allowNull: true
 		}

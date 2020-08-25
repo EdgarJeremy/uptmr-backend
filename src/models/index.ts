@@ -3,6 +3,8 @@ import ModelFactoryInterface from './typings/ModelFactoryInterface';
 import { UserFactory } from './User';
 import { TokenFactory } from './Token';
 import { DepartmentFactory } from './Department';
+import { ReportFactory } from './Report';
+import { FileFactory } from './File';
 
 const createModels: Function = (): ModelFactoryInterface => {
 	const {
@@ -19,7 +21,7 @@ const createModels: Function = (): ModelFactoryInterface => {
 			useUTC: true,
 		},
 		timezone: '+08:00',
-		operatorsAliases: false,
+		operatorsAliases: true,
 		logging: process.env.SYSTEM_LOGGING === 'true' ? console.log : (msg: string) => {},
 	});
 	const db: ModelFactoryInterface = {
@@ -27,7 +29,9 @@ const createModels: Function = (): ModelFactoryInterface => {
 		Sequelize,
 		User: UserFactory(sequelize, Sequelize),
 		Token: TokenFactory(sequelize, Sequelize),
-		Department: DepartmentFactory(sequelize, Sequelize)
+		Department: DepartmentFactory(sequelize, Sequelize),
+		Report: ReportFactory(sequelize, Sequelize),
+		File: FileFactory(sequelize, Sequelize)
 	};
 
 	Object.keys(db).forEach(

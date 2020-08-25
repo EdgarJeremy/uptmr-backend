@@ -3,9 +3,10 @@ import fs from 'fs';
 import socketio from 'socket.io';
 
 import ModelFactoryInterface from '../models/typings/ModelFactoryInterface';
+import TelegramBot from 'node-telegram-bot-api';
 
 export interface RouteList {
-	(app: express.Application, models: ModelFactoryInterface, io: socketio.Server): SiriusRouter[];
+	(app: express.Application, models: ModelFactoryInterface, io: socketio.Server, bot: TelegramBot): SiriusRouter[];
 }
 export interface SiriusRouter extends express.Router {
 	basepoint: string;
@@ -15,6 +16,7 @@ const createRoutes: RouteList = (
 	app: express.Application,
 	models: ModelFactoryInterface,
 	io: socketio.Server,
+	bot: TelegramBot
 ): SiriusRouter[] => {
 	const routes: string[] = fs
 		.readdirSync(__dirname)
@@ -34,7 +36,7 @@ const createRoutes: RouteList = (
 		route = route.replace('.js', '');
 		const router: any = require(`./${route}`).default;
 		if (typeof router === 'function') {
-			const routerHandler: SiriusRouter = router(app, models, io);
+			const routerHandler: SiriusRouter = router(app, models, io, bot);
 			routerHandler.basepoint = route;
 			app.use(`${apiURL}/${route}`, routerHandler);
 			routeList.push(routerHandler);
