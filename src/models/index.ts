@@ -5,6 +5,7 @@ import { TokenFactory } from './Token';
 import { DepartmentFactory } from './Department';
 import { ReportFactory } from './Report';
 import { FileFactory } from './File';
+import { LetterFactory } from './Letter';
 
 const createModels: Function = (): ModelFactoryInterface => {
 	const {
@@ -31,7 +32,8 @@ const createModels: Function = (): ModelFactoryInterface => {
 		Token: TokenFactory(sequelize, Sequelize),
 		Department: DepartmentFactory(sequelize, Sequelize),
 		Report: ReportFactory(sequelize, Sequelize),
-		File: FileFactory(sequelize, Sequelize)
+		File: FileFactory(sequelize, Sequelize),
+		Letter: LetterFactory(sequelize, Sequelize)
 	};
 
 	Object.keys(db).forEach(

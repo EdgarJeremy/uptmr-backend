@@ -20,6 +20,7 @@ export interface ReportAttributes {
     done: boolean;
     rejection_note: string;
     questionnaire: Questionnaire;
+    report_file: string;
     user_id?: number;
     department_id?: number;
     created_at?: Date;
@@ -65,6 +66,10 @@ export const ReportFactory: Factory<ReportInstance, ReportAttributes> = (
         },
         questionnaire: {
             type: DataTypes.JSONB,
+            allowNull: false
+        },
+        report_file: {
+            type: DataTypes.TEXT,
             allowNull: false
         }
     };

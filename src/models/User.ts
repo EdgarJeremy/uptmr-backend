@@ -11,6 +11,7 @@ export interface UserAttributes {
 	password: string;
 	type: 'UPT' | 'Department' | 'Administrator';
 	target_id: number[] | null;
+	letter_admin: boolean;
 	telegram_code?: number;
 	telegram_chat_id?: number;
 	department_id?: number;
@@ -59,6 +60,11 @@ export const UserFactory: Factory<UserInstance, UserAttributes> = (
 		telegram_chat_id: {
 			type: DataTypes.INTEGER,
 			allowNull: true
+		},
+		letter_admin: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: false
 		}
 	};
 	const User: Sequelize.Model<UserInstance, UserAttributes> = sequelize.define<

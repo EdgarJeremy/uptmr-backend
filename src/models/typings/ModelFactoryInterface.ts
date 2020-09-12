@@ -4,6 +4,7 @@ import { TokenInstance, TokenAttributes } from '../Token';
 import { DepartmentInstance, DepartmentAttributes } from '../Department';
 import { ReportInstance, ReportAttributes } from '../Report';
 import { FileInstance, FileAttributes } from '../File';
+import { LetterAttributes, LetterInstance } from '../Letter';
 
 interface Obj {
 	[s: string]: any;
@@ -17,4 +18,5 @@ export default interface ModelFactoryInterface extends Obj {
 	Department: Sequelize.Model<DepartmentInstance, DepartmentAttributes>;
 	Report: Sequelize.Model<ReportInstance, ReportAttributes>;
 	File: Sequelize.Model<FileInstance, FileAttributes>;
+	Letter: Sequelize.Model<LetterInstance, LetterAttributes>;
 }
