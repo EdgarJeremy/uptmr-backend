@@ -64,7 +64,7 @@ const reportsRoute: Routes = (
 				delete data.files;
 				data.done = false;
 				data.user_id = req.user.id;
-				data.department_id = req.user.department_id;
+				data.department_id = req.user.type === 'Department' ? req.user.department_id : data.department_id;
 				const report: ReportInstance = await models.Report.create(data);
 				const upts = await models.User.findAll({
 					where: {
