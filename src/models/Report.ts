@@ -18,9 +18,10 @@ export interface ReportAttributes {
     room: string;
     since: Date;
     done: boolean;
-    rejection_note: string;
+    rejection_note: string | null;
     questionnaire: Questionnaire;
     report_file: string;
+    read: boolean;
     user_id?: number;
     department_id?: number;
     created_at?: Date;
@@ -71,6 +72,11 @@ export const ReportFactory: Factory<ReportInstance, ReportAttributes> = (
         report_file: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        read: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         }
     };
     const Report: Sequelize.Model<ReportInstance, ReportAttributes> = sequelize.define<

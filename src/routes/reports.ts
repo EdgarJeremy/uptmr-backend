@@ -41,6 +41,69 @@ const reportsRoute: Routes = (
 	);
 
 	router.get(
+		'/update_read_done',
+		a(
+			async (req: express.Request, res: express.Response): Promise<void> => {
+				const update = await models.Report.update({
+					read: true
+				}, {
+					where: {
+						department_id: req.user.department_id!,
+						done: true,
+						read: false
+					}
+				});
+				const body: OkResponse = { data: update };
+				res.json(body);
+			}
+		)
+	);
+
+	router.get(
+		'/update_read_rejected',
+		a(
+			async (req: express.Request, res: express.Response): Promise<void> => {
+				const update = await models.Report.update({
+					read: true
+				}, {
+					where: {
+						rejection_note: {
+							$ne: null
+						},
+						department_id: req.user.department_id!,
+						done: false,
+						read: false
+					}
+				});
+				const body: OkResponse = { data: update };
+				res.json(body);
+			}
+		)
+	);
+
+	router.get(
+		'/update_read_inbox',
+		a(
+			async (req: express.Request, res: express.Response): Promise<void> => {
+				const update = await models.Report.update({
+					read: true
+				}, {
+					where: {
+						rejection_note: null!,
+						department_id: {
+							$in: req.user.target_id
+						},
+						done: false,
+						read: false
+					}
+				});
+				const body: OkResponse = { data: update };
+				res.json(body);
+			}
+		)
+	);
+
+	router.get(
 		'/:id',
 		a(
 			async (req: express.Request, res: express.Response): Promise<void> => {
