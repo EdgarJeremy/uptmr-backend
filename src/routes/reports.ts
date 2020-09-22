@@ -151,7 +151,7 @@ const reportsRoute: Routes = (
 					}
 				});
 				for (let i = 0; i < files.length; i++) {
-					const file = files[0];
+					const file = files[i];
 					await models.File.create({
 						data: file,
 						report_id: report.id
