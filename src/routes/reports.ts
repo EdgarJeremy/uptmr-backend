@@ -108,7 +108,16 @@ const reportsRoute: Routes = (
 		a(
 			async (req: express.Request, res: express.Response): Promise<void> => {
 				const { id }: any = req.params;
-				const report: ReportInstance | null = await models.Report.findOne({ where: { id } });
+				const report: ReportInstance | null = await models.Report.findOne({
+					where: { id },
+					include: [{
+						model: models.Department,
+						attributes: ['name']
+					}, {
+						model: models.File,
+						attributes: ['data']
+					}]
+				});
 				if (!report) throw new NotFoundError('Report tidak ditemukan');
 				const body: OkResponse = { data: report };
 
