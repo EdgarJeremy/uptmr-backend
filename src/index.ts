@@ -111,25 +111,6 @@ app.get(
 )
 
 app.get(
-	'/report_file/:id',
-	(req: express.Request, res: express.Response) => {
-		const { id } = req.params;
-		models.Report.findByPk(id).then((report) => {
-			if (!report) res.status(404).send('not found');
-			const b64 = report?.report_file.split(',')[1]!;
-			const header = report?.report_file.split(',')[0]!;
-			const mime = header.replace('data:', '').replace(';base64', '');
-			const buff = new Buffer(b64, 'base64');
-			res.writeHead(200, {
-				'Content-Type': mime,
-				'Content-Length': buff.length
-			});
-			res.end(buff);
-		});
-	}
-)
-
-app.get(
 	'/letter_file/:id',
 	(req: express.Request, res: express.Response) => {
 		const { id } = req.params;
