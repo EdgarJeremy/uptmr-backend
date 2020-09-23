@@ -50,6 +50,7 @@ const reportsRoute: Routes = (
 					where: {
 						department_id: req.user.department_id!,
 						done: true,
+						status: '3',
 						read: false
 					}
 				});
@@ -93,7 +94,12 @@ const reportsRoute: Routes = (
 						department_id: {
 							$in: req.user.target_id
 						},
-						done: false,
+						done: {
+							$or: [true, false]
+						},
+						status: {
+							$or: ['1', '2']
+						},
 						read: false
 					}
 				});
@@ -137,6 +143,7 @@ const reportsRoute: Routes = (
 				data.done = false;
 				data.user_id = req.user.id;
 				data.department_id = req.user.type === 'Department' ? req.user.department_id : data.department_id;
+				data.status = 1;
 				const report: ReportInstance = await models.Report.create(data);
 				const upts = await models.User.findAll({
 					where: {

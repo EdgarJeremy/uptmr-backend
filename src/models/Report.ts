@@ -18,6 +18,7 @@ export interface ReportAttributes {
     room: string;
     since: Date;
     done: boolean;
+    status: 1 | 2 | 3;
     rejection_note: string | null;
     questionnaire: Questionnaire;
     read: boolean;
@@ -58,6 +59,10 @@ export const ReportFactory: Factory<ReportInstance, ReportAttributes> = (
         },
         done: {
             type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        status: {
+            type: DataTypes.ENUM(['1', '2', '3']),
             allowNull: false
         },
         rejection_note: {
