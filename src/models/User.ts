@@ -11,7 +11,7 @@ export interface UserAttributes {
 	password: string;
 	type: 'UPT' | 'Department' | 'Administrator';
 	target_id: number[] | null;
-	letter_admin: boolean;
+	letter_admin?: boolean;
 	telegram_code?: number;
 	telegram_chat_id?: number;
 	department_id?: number;
