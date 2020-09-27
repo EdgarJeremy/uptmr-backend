@@ -186,10 +186,19 @@ const reportsRoute: Routes = (
 				if (!report) throw new NotFoundError('Report tidak ditemukan');
 				if (report.user.telegram_chat_id) {
 					if (data.done) {
-						bot.sendMessage(report.user.telegram_chat_id, `Laporan yang anda buat telah disetujui oleh pihak UPT&MR`);
+						bot.sendMessage(report.user.telegram_chat_id, `Laporan yang anda buat telah disetujui dan menunggu proses oleh pihak UPT&MR`);
 					}
 					if (data.rejection_note) {
 						bot.sendMessage(report.user.telegram_chat_id, `Laporan yang anda buat telah ditolak oleh pihak UPT&MR dengan catatan penolakan: ${data.rejection_note}`);
+					}
+					if(data.status == 1) {
+						bot.sendMessage(report.user.telegram_chat_id, `Laporan yang anda buat telah berstatus dikirim dan belum diproses`);
+					}
+					if(data.status == 2) {
+						bot.sendMessage(report.user.telegram_chat_id, `Laporan yang anda buat telah berstatus diproses!`);
+					}
+					if(data.status == 3) {
+						bot.sendMessage(report.user.telegram_chat_id, `Laporan yang anda buat telah berstatus selesai!`);
 					}
 				}
 				await report.update(data);
